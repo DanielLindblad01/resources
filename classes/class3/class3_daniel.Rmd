@@ -1,0 +1,353 @@
+---
+title: "Class 3"
+author: "Pernille Brams"
+date: "22/2/2024"
+output:
+  html_document:
+    toc: true  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Setting my root directory to where I have my /data folder etc. (easier for me, but personalise to your own way of working)
+knitr::opts_knit$set(root.dir = "/Users/Daniel/Desktop/cog scio/resources/classes")
+
+```
+
+```{r libs}
+library(pacman)
+
+pacman::p_load(tidyverse,
+               ggpubr,
+               ggplot2)
+
+```
+
+# Continuing learning about simulations (and practicing a bit)
+In coding, repetition is key when learning it... (at least it is for me) - it's kind of like when you learn a new language :333 n'est pas??
+
+Choose your exercises as per your needs - all of this is highly relevant for the remaining portfolios and exercises. In a few weeks, you'll get the opportunity (only if you want to) to submit answers to some exercises I'll give you (including some like the ones below) to me, and I'll review them and give you feedback.
+
+Also, never feel 'guilty' for using hints / ask for help. Hints are there and we are there to help out. Try first on your own, and use the hint/ask when you feel your working memory slacking a bit :)) Just make sure you have some idea about what's going on in the code, also after you've used the hint.
+
+## A. Need some more practice in for loops?
+### A1 Using a for-loop, calculate the sum of the first 100 positive integers, starting from 1
+Result to check: You should get 5050.
+
+Hint A1* under Hints
+```{r}
+
+```
+
+### A2 Using a for-loop, create a vector of the squares of the first 20 positive integers, starting from 1. Calculate the sum of the vector.
+Result to check: You should get 2870.
+
+Hint A2* under Hints
+```{r}
+
+```
+
+## B. Need some more practice in while loops? 
+### B1 Use a while loop to find the smallest integer n, such that the sum of the first n positive integers is greater than 1000.
+Result to check: You should get 45 here
+
+Hint B1* under Hints
+
+```{r}
+
+```
+
+### B2 Create a countdown from 10 to 1 and then print "Lift off!".
+
+Hint B2* under Hints
+
+```{r}
+
+```
+
+## C. Need some more practice in if-else statement? 
+### C1 Write code to determine if a given integer x is positive, negative, or zero, for the following values for x: 
+-4
+7
+23
+-120309
+0
+
+```{r}
+
+```
+
+Tip for C1: do it one by one first, and if you need more practice, do a for-loop and check them that way.
+
+### C2 Write a script that categorizes a person's age: child (< 12), teenager (12-18), adult (19-65), senior (> 65) for the following ages
+Ages: 
+10
+20
+56
+19
+89
+:) :) 26 <3 <3 
+
+```{r}
+
+```
+
+## D. Need some more practice in functions? 
+### D1 Create a function that takes a vector of numbers and returns the mean of that vector.
+(If you need to, check class 2's doc for how to write functions)
+```{r}
+vector_ = c(10,20,30,40,50)
+
+sum_v = 0
+obs = 0
+v_function = function(vector_){
+  for (i in vector_){
+    sum_v = sum_v+i
+    obs = obs+1
+  }
+v_mean = (sum_v)/(obs)
+  
+print(v_mean)
+}
+
+v_function(vector_)
+
+```
+
+### D2 Write a function named calculate_area_circle that takes the radius of a circle as its argument and returns the area of the circle. Remember, the formula to calculate the area of a circle is pi*r^2, where r is the radius of the circle.
+
+```{r}
+
+calculate_area_circle = function(r){
+  area_circle = pi*r^2
+  print(area_circle)
+}
+
+calculate_area_circle(3)
+
+
+```
+
+## E. Need some more practice in simulations? 
+### E1 Write a simulation to mimic the rolling of two six-sided dice. Simulate rolling the two dice 10000 times and store the sum of the dice faces for each roll. Plot a histogram of the sums to see the distribution of the total dice rolls. Calculate and print the mean and standard deviation of the rolls.
+```{r}
+
+dice_roll = function(n){
+  dice_faces = sample(1:6, size=n, replace = TRUE) + sample(1:6, size=n, replace = TRUE)
+  return(dice_faces)
+}
+
+dice_sim = dice_roll(10000)
+
+df = data.frame(x=dice_sim)
+
+
+library(ggplot2)
+ggplot(df, aes(x=x))+
+  geom_histogram(binwidth=1, breaks=seq(1.5, 12.5, by =1), color='black')+
+  scale_x_continuous(breaks=2:12, labels=2:12, expand=c(0,0))+
+  labs(title = "Simulating 10.000 throws of two six-sided dice", x="Dice Values", y="Amount")
+
+
+
+
+```
+
+### E2 Consider a population that grows exponentially according to the formula \(P = P_0e^{rt}\) (the e^{rt} part is written exp(r*t) in r), where \(P_0\) is the initial population size, \(r\) is the rate of growth, and \(t\) is time in years. Simulate the growth of a population starting with 100 individuals and a growth rate of 2% per year over 50 years. Plot the population size each year.
+
+```{r}
+
+P_0 = 100
+r = 0.02
+
+pop_growth = function(t){
+  P = P_0*exp(r*t)
+  return(P)
+}
+
+pop_growth(50)
+
+
+```
+### E3 Simulate the annual returns of an investment portfolio with an average return of 7% and a standard deviation of 10%. Assume the returns follow a normal distribution. Simulate 30 years of returns and calculate the final portfolio value assuming an initial investment of $10,000. Repeat this simulation 1000 times and plot a histogram of the final portfolio values. Calculate the mean and standard deviation of the final values.
+
+```{r}
+mean_return = 0.07
+sd_return = 0.10
+years = 30
+initial_investment = 10000
+
+returns1 = rnorm(30, mean = 0.07, sd = 0.10)
+
+portfolio = 10000
+
+for (i in 1:years) {
+  portfolio = portfolio * (1 + returns1[i])
+  
+}
+
+print(portfolio)
+
+
+
+
+invest_sim = function(n, mean_return, sd_return, initial_investment, years){
+  results_v = c() #Making a vector to store results in later
+  for (i in 1:n){
+    portfolio_value = initial_investment #Reset Portfolio each loop
+    annual_returns = rnorm(years, mean = mean_return, sd = sd_return) #Generate the returns each year
+    for (j in 1:years){
+      portfolio_value = portfolio_value * (1+annual_returns[j]) #Applying the generated returns each year
+    }
+    
+    results_v[i] = portfolio_value #Store the result
+  } 
+  
+  return(results_v) #Return all the results
+}
+
+
+sim_investing = invest_sim(1000, 0.07, 0.10, 10000, 30)
+
+
+df_plot = data.frame(x = sim_investing)
+
+ggplot(df_plot)+
+  geom_histogram(aes(x=x), color = 'black')+
+  labs(title = '1000 Simulations of Stock Portfolios', x='Portfolio value', y='Amount of simulations ended in this value') +
+  theme_minimal()
+
+mean(df_plot$x)
+sd(df_plot$x)
+
+
+
+```
+
+#### E4 (Ex. 3.5 from the book) Probability distributions: Using a bar plot in R, graph the binomial distribution with n = 20 and p = 0.3.
+
+```{r}
+
+binom_ = rbinom(n=20, size= 1, prob=0.3)
+
+binom_df = data.frame(x=binom_)
+
+ggplot(binom_df)+
+  geom_bar(aes(x=x))
+
+
+```
+
+### E5 Sampling from a discrete distribution - rolling a loaded die
+A loaded (or biased) die is one where the probabilities of landing on each number are not equal. Simulate rolling a loaded die 10,000 times, where the probabilities of rolling each number from 1 to 6 are given as follows: P(1) = 0.05, P(2) = 0.10, P(3) = 0.35, P(4) = 0.25, P(5) = 0.15, P(6) = 0.10. Plot a histogram of the outcomes and calculate the mean and standard deviation of the results.
+
+```{r}
+P_1 = 0.05
+P_2 = 0.10
+P_3 = 0.35
+P_4 = 0.25
+P_5 = 0.15
+P_6 = 0.10
+loaded_die = c(P_1, P_2, P_3, P_4, P_5, P_6)
+
+
+die_roll = function(rolls){
+  sample(1:6, size=rolls, replace=TRUE, prob=loaded_die)
+}
+
+
+
+
+die_sim = die_roll(10000)
+
+die_sim = data.frame(x=die_sim) #df for plotting
+
+ggplot(die_sim)+
+  geom_histogram(aes(x=x))+
+  labs(title = "Simulation of 10,000 Loaded Die Rolls", x="Outcome", y="Amount")
+  theme_minimal()
+
+
+mean(die_sim$x)
+sd(die_sim$x)
+
+
+```
+
+### E6 Sampling from a continuous distribution - generating heights
+Assume that the heights of individuals in a population are normally distributed with a mean of 170 cm and a standard deviation of 10 cm. Generate a sample of 1,000 individual heights from this distribution. Plot a histogram of the generated heights and calculate the mean and standard deviation of the sample.
+
+```{r}
+
+height_sim = rnorm(1000, mean=170, sd=10)
+
+
+height_df = data.frame(x=height_sim) #df for plotting
+
+
+ggplot(height_df)+
+  geom_histogram(aes(x=x), color='black', fill='orange')+
+  labs(title = "Simulation of 1,000 individual heights", x="Height in cm", y="Amount of individuals")+
+  theme_minimal()
+  
+
+mean(height_df$x)
+sd(height_df$x)
+
+
+
+```
+
+### E7 Simulating coin flips - Bernoulli Distribution
+(this is something we work with on the master's hehe)
+Simulate flipping a fair coin 5,000 times, where the outcome of each flip is either "Heads" or "Tails" with equal probability. Calculate and print the proportion of flips that result in Heads. This exercise demonstrates sampling from a Bernoulli distribution, which is a simple case of a discrete distribution.
+```{r}
+
+coin=c('Heads', 'Tails')
+
+sample(coin, size= 1, replace=TRUE)
+
+coin_sim = sample(coin, size= 5000, replace=TRUE)
+
+coin.df = data.frame(x=coin_sim)
+
+ggplot(coin.df)+
+  geom_bar(aes(x=x))
+
+```
+
+# A few more exercises from the book
+## Chapter 3
+#### Ex 3.3 Probability distributions: Using R, graph probability densities for the normal distribution, plotting several different curves corresponding to different choices of mean and standard deviation parameters.
+A note: The task is to draw/plot some probability distributions for the normal distribution. From Methods 1 we learnt the normal distribution as just one thing that we want to compare our data against to e.g. check for normality of residuals. Actually, the normal distribution (also known as the gaussian) is also called family of distributions that can have any real value as the mean and any positive value as the standard deviation. The *standard* normal distribution is a special case of the normal distribution with a mean of 0 and standard deviation of 1, and this guy we know from Methods 1.
+
+The point of this task is thus for you to see what happens when you vary the mean/standard deviation and nothing else in a distribution.
+```{r}
+
+
+
+
+
+
+
+
+```
+
+#### Ex. 3.4 Probability distributions: Using a bar plot in R, graph the Poisson distribution with parameter 3.5.
+(Remember when the book says 'graph' it means simulate some data as per instructions and make a plot)
+
+```{r}
+
+```
+
+# Hints for exercises A-E
+## Hints for A
+Hint A1: Start by making a variable called my_sum (or whatever you want to call it), starting at 0. Can you write code to loop through from i = 1 all the way to 100 and add each i to 'my_sum'? 
+
+Hint A2: Create an empty vector (or a vector full of 0s or something) that's as long as you need it to be. Then in your for loop, use indexing in your vector to place your squared values. After the for loop has run, you can just do sum(your_vector_with_the_squared_values). 
+
+## Hints for B
+Hint B1: Start by defining a sum-tracker object, which will be used in the loop to check if it is below/equal to 1000 - because while (!) that is true, we want to add the next number to the sum-tracker. The while loop will stop when the condition youve set ISNT true anymore, and then, you should print the n it got to (so you also need to, before your while loop starts, define an n, which is the positive integer-holder).
+
+Hint B2: For this loop, you're gonna be counting down, so subtracting something from an object you must define, and subtracting until 0. So your 'while' statement has to be like "while this object is OVER 0".
